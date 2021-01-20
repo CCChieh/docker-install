@@ -1,0 +1,21 @@
+#!/bin/bash
+
+echo 安装Docker
+
+curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
+
+echo 开启Docker自启
+sudo systemctl enable docker
+echo 启动Docker
+sudo systemctl start docker 
+
+echo 设置Docker镜像加速器$1
+docker_addr=$1
+sudo mkdir -p /etc/docker 
+sudo tee /etc/docker/daemon.json <<EOF
+{
+  "registry-mirrors": ["${docker_addr}"]
+}
+EOF
+sudo systemctl daemon-reload
+sudo systemctl restart docker
